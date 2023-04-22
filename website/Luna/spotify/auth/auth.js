@@ -1,7 +1,7 @@
 import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 
 var state = generateRandomString(16);
-var scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state';
+var scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read';
 
 
 export function userLogin(){
@@ -9,7 +9,7 @@ export function userLogin(){
       window.location =
         'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
-          response_type: 'code',
+          response_type: 'token',
           client_id: CLIENT_ID,
           scope: scope,
           redirect_uri: REDIRECT_URI,
