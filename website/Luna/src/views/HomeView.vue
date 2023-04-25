@@ -18,8 +18,8 @@
 import MusicRow from '../components/music/MusicRow.vue';
 import HomepageContent from '../components/HomepageContent.vue';
 import MusicPlayer from '../components/music_player/MusicPlayer.vue';
-import { getTrackLink } from '../../spotify/play_track/get_track_link';
 import axios from 'axios';
+import { getPlayer ,playSong} from '../../spotify/play_track/player';
 
 export default {
   data() {
@@ -39,16 +39,19 @@ export default {
   },
   methods:{
     fetchSong:async function(videoUrl){
-      if(this.musicPlaying){
-        await this.$refs.player_component.forceStop();
-        this.musicPlaying=false;
-      }
+      // const player=getPlayer();
+      // if(this.musicPlaying){
+      //   await this.$refs.player_component.forceStop();
+      //   this.musicPlaying=false;
+      // }
       console.log('waiting')
-      console.log(videoUrl);
+      console.log(videoUrl['uri']);
+      playSong(videoUrl['uri']);
       this.song_data=videoUrl;
       this.musicPlaying=true;
-      const x=videoUrl.external_urls.spotify;
-      this.muiscUrl=x.replace('https://open.spotify.com', 'https://open.spotify.com/embed').replace('/track/', '/embed/track/');
+
+      // const x=videoUrl.external_urls.spotify;
+      // this.muiscUrl=x.replace('https://open.spotify.com', 'https://open.spotify.com/embed').replace('/track/', '/embed/track/');
       // console.log(y);
       // getTrackLink(videoUrl);
     },

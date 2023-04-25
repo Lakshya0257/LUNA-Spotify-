@@ -14,31 +14,35 @@ import SideBar from './components/basic_layout/SideBar.vue';
 import { userLogin } from '../spotify/auth/auth'
 import { generateAccessToken } from '../spotify/token/auth_token'
 
+
 export default {
   components: {
     Header,
     NavBar,
     SideBar
   },
-  async created() {
-    window.location.hash.substring(1).split('&').reduce((initial,item)=>{
-      let parts=item.split('=');
-      initial[parts[0]]=decodeURIComponent(parts[1]);
-      console.log(initial);
-    });
+  created() {
+    // window.location.hash.substring(1).split('&').reduce((initial,item)=>{
+    //   let parts=item.split('=');
+    //   initial[parts[0]]=decodeURIComponent(parts[1]);
+    //   console.log(initial);
+    //   localStorage.setItem('access_token',initial)
+    // });
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
-    const access_token = urlParams.get('acess_token');
-    localStorage.setItem('access_token', access_token);
-    if (localStorage.getItem('access_token') === 'null') {
+    // const accessToken = new URLSearchParams(new URL(window.location).hash.substring(1)).get('access_token');
+    localStorage.setItem('code',code)
+// console.log(accessToken);
+    if (localStorage.getItem('code') === 'null') {
       userLogin();
     }
 
-    // if (localStorage.getItem('access_token') === 'null') {
-    //   console.log('running...');
-    //   generateAccessToken();
-    // }
+    if (localStorage.getItem('access_token') === 'null') {
+      console.log('running...');
+      generateAccessToken();
+    }
+    
     // spotifyWebSDKInstance();
 //     const script = document.createElement("script");
 //     script.src = "https://sdk.scdn.co/spotify-player.js";

@@ -1,6 +1,7 @@
 import { createApp} from 'vue'
+
 import { createPinia } from 'pinia'
-// import PlayerPlugin from './plugin/PlayerPlugin'
+import SpotifyPlugin from '../spotify/play_track/player'
 
 import App from './App.vue'
 import router from './router'
@@ -11,12 +12,16 @@ import './assets/body.css'
 
 
 
+
 const app = createApp(App)
-// app.use(PlayerPlugin)
+
+
 app.use(createPinia())
 app.use(router)
-
+app.use(SpotifyPlugin)
 
 app.mount('#app')
+
+
 
 

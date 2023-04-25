@@ -1,20 +1,38 @@
 import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 
 var state = generateRandomString(16);
-var scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read';
+var scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming';
 
 
 export function userLogin(){
+  const authEndpoint = "https://accounts.spotify.com/authorize";
+  const redirectUri = REDIRECT_URI;
   localStorage.setItem('access_token', 'null');
+  const scopes = [
+    'user-read-private',
+    'user-read-email',
+    'playlist-read-private',
+    'playlist-modify-public',
+    'playlist-modify-private',
+    'user-library-read',
+    'user-library-modify',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'app-remote-control',
+    'streaming'
+  ];
+  // window.location=`${authEndpoint}?client_id=${CLIENT_ID}?response_type=code&redirect_uri=${redirectUri}&scope=${scopes.join(
+  //   "%20"
+  // )}&response_type=token&show_dialog=true`;
       window.location =
         'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
-          response_type: 'token',
+          response_type: 'code',
           client_id: CLIENT_ID,
           scope: scope,
           redirect_uri: REDIRECT_URI,
-          state: state
 });
+
 }
 
 function generateRandomString(length) {

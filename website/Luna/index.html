@@ -20,63 +20,6 @@
     <div id="app" ></div>
     
     <script type="module" src="/src/main.js"></script>
-    <script src="https://sdk.scdn.co/spotify-player.js"></script>
-    <script>
-      let token=localStorage.getItem('access_token');
-      window.onSpotifyWebPlaybackSDKReady = () => {
-
-        // Define the Spotify Connect device, getOAuthToken has an actual token 
-        // hardcoded for the sake of simplicity
-        var player = new Spotify.Player({
-          name: 'A Spotify Web SDK Player',
-          getOAuthToken: callback => {
-            callback(token);
-          },
-          volume: 1
-        });
-    
-        // Called when connected to the player created beforehand successfully
-        player.addListener('ready', ({ device_id }) => {
-          console.log('Ready with Device ID', device_id);
-    
-          const play = ({
-            spotify_uri,
-            playerInstance: {
-              _options: {
-                getOAuthToken,
-                id
-              }
-            }
-          }) => {
-            getOAuthToken(access_token => {
-              fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ uris: [spotify_uri] }),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-                },
-              });
-            });
-          };
-    
-            document.getElementById('app').onclick=function(){
-              play({
-                playerInstance: player,
-                spotify_uri: 'spotify:track:7xGfFoTpQ2E7fRF5lN10tr',
-              });
-            }
-          
-        });
-    
-        // Connect to the player created beforehand, this is equivalent to 
-        // creating a new device which will be visible for Spotify Connect
-        player.connect();
-      };
-
-      
-      
-    </script>
   </body>
   
 </html>

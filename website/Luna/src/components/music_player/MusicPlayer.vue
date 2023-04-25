@@ -45,17 +45,17 @@
       </div>
     </div>
     <div class="timeline">
-      <p class="current-time">{{ currentTime }}</p>
+      <p class="current-time" id="currentTime">00:00</p>
       <input
         type="range"
         value="0"
         ref="progressBar"
-        id="progressBar"
+        id="progressBar" min="0" max="100"
         @input="handleProgressInput"
         @mousedown="removeEvent"
         @mouseup="addEvent"
       />
-      <p class="ending-time">{{ endingTime }}</p>
+      <p class="ending-time" id="finalTime">00:00</p>
     </div>
 
     <div class="side-controls">

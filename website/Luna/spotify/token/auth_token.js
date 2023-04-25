@@ -9,7 +9,8 @@ export function generateAccessToken(){
       // params.append('client_id', CLIENT_ID);
       // params.append('client_secret', CLIENT_SECRET);
       params.append('redirect_uri', REDIRECT_URI);
-      params.append('scope', 'web-playback streaming app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read user-library-modify playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private user-read-email user-read-private user-follow-read user-follow-modify user-top-read user-read-playback-position user-read-recently-played user-read-playback-state user-modify-playback-state user-read-currently-playing');
+      params.append('scope', 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming'
+      );
       axios 
         .post('https://accounts.spotify.com/api/token', params, {
           headers: {
