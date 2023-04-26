@@ -2,7 +2,7 @@
   <main>
     <HomepageContent @playSong="fetchSong"/>
     <Transition name="player">
-      <MusicPlayer v-if="musicPlaying" :muiscUrl="muiscUrl" :songData="song_data" ref="player_component" :queue_data="queue_data" :song_index="song_index" @nextSong="fetchNextSong"/>
+      <MusicPlayer v-if="musicPlaying" :muiscUrl="muiscUrl" :songData="song_data" ref="player_component" :queue_data="queue_data" :song_index="song_index" />
     </Transition>
   </main>
 
@@ -19,7 +19,7 @@ import MusicRow from '../components/music/MusicRow.vue';
 import HomepageContent from '../components/HomepageContent.vue';
 import MusicPlayer from '../components/music_player/MusicPlayer.vue';
 import axios from 'axios';
-import { getPlayer ,playSong} from '../../spotify/play_track/player';
+import { getPlayer ,playSong } from '../../spotify/play_track/player';
 
 export default {
   data() {
@@ -38,64 +38,13 @@ export default {
     HomepageContent
   },
   methods:{
-    fetchSong:async function(videoUrl){
-      // const player=getPlayer();
-      // if(this.musicPlaying){
-      //   await this.$refs.player_component.forceStop();
-      //   this.musicPlaying=false;
-      // }
+    fetchSong(videoUrl){
+      this.musicPlaying=false;
       console.log('waiting')
       console.log(videoUrl['uri']);
       playSong(videoUrl['uri']);
       this.song_data=videoUrl;
       this.musicPlaying=true;
-
-      // const x=videoUrl.external_urls.spotify;
-      // this.muiscUrl=x.replace('https://open.spotify.com', 'https://open.spotify.com/embed').replace('/track/', '/embed/track/');
-      // console.log(y);
-      // getTrackLink(videoUrl);
-    },
-    fetchQueue(videoId){
-      axios
-      .get(`http://127.0.0.1:5000/queue?videoId=${videoId}`)
-      .then(response => {
-        this.queue_data=response.data.tracks;
-        console.log(this.queue_data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    },
-
-    async fetchNextSong(){
-      this.musicPlaying=false;
-      console.log('waiting')
-      try {
-        axios
-          .get(`http://127.0.0.1:5000/getSong?videoId=${this.queue_data[this.song_index].videoId}`)
-          .then(async data => {
-            console.log('done')
-            this.song_data=data;
-            console.log(data);
-            this.song_index++;
-            this.musicPlaying=true;
-          })
-          .catch(error => {
-            console.error(error);
-            if (error.response && error.response.status === 403) {
-              console.log('Something went wrong! Trying again..');
-              fetchSong(videoId);
-            }
-          });
-      } catch {
-        error => {
-          console.error(error);
-          if (error.response && error.response.status === 403) {
-            console.log('Something went wrong! Trying again..');
-            fetchSong(videoId);
-          }
-        };
-      }
     },
   }
 };

@@ -7,7 +7,7 @@ export function generateAccessToken(){
     const params = new URLSearchParams();
       params.append('grant_type', 'refresh_token');
       params.append('refresh_token', localStorage.getItem('refresh_token'));
-      params.append('scope', 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming');
+      params.append('scope', 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming user-top-read');
 
 
       axios

@@ -1,18 +1,16 @@
-import axios from 'axios';
-import { APIException } from '../../error_handler/error_handler';
-
-export async function getRecommendations(){
+export async function getQueue(track,artist){
     const token=localStorage.getItem('access_token');
     const authHeader = {
         'Authorization': `Bearer ${token}`
     };
     const params={
         limit:30,
-        time_range:'medium_term',
+        seed_tracks:track,
+        seed_artist:artist
     };
     let apiResponse={};
       await axios
-        .get('https://api.spotify.com/v1/me/top/tracks', {
+        .get('https://api.spotify.com/v1/recommendations', {
           headers: authHeader,
           params:params
         })

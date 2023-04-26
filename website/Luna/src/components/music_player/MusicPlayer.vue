@@ -1,15 +1,5 @@
 <template>
   <div class="music_player">
-    <audio
-      ref="song"
-      @loadedmetadata="updateEndingTime"
-      @timeupdate="updateTime"
-      class="audio-link"
-      autoplay
-    >
-      <source id="song_link" :src="muiscUrl" type="audio/mpeg" />
-      Your browser does not support the audio element.
-    </audio>
     <div class="song-info" onclick="musicPlayer(event)">
       <img
         :src="songData.album.images[0].url"
@@ -67,6 +57,7 @@
 
 
 <script>
+import { playerPlay , playerPause} from '../../../spotify/play_track/player';
 export default {
   props: ['songData','queue_data','muiscUrl'],
   data() {
@@ -77,23 +68,7 @@ export default {
       
     };
   },
-  mounted() {
-    this.$spotifyWebPlayback.addListener('status', (status) => {
-  console.log('Playback status:', status);
-});
-    this.$spotifyWebPlayback.addListener('ready', ({ device_id }) => {
-  // Device is ready, you can now call the play function with the device ID
-  this.$spotifyWebPlayback.play({
-    uris: ['spotify:track:56n8IKs5nYRg3UQp0eMPeU'],
-    device_id: device_id
-  }).then(() => {
-    console.log('Playback started successfully');
-  }).catch((error) => {
-    console.error('Failed to start playback', error);
-  });
-});
-
-    
+  mounted() {    
   },
   methods: {
     forceStop() {
@@ -110,27 +85,6 @@ export default {
       let minutes = Math.floor(song.duration / 60);
       let seconds = Math.round(song.duration - minutes * 60);
       this.endingTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    },
-
-    updateTime() {
-      const song = this.$refs.song;
-      const progressBarValue = this.$refs.progressBar;
-      if (this.songStatus) {
-        let minutes = Math.floor(song.currentTime / 60);
-        let seconds = Math.round(song.currentTime - minutes * 60);
-        this.currentTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        progressBarValue.value = song.currentTime;
-        progressBarValue.style.background =
-          'linear-gradient(to right, green, ' +
-          (song.currentTime / song.duration) * 100 +
-          '%, grey ' +
-          (song.currentTime / song.duration) * 100 +
-          '%)';
-      
-      if((song.currentTime/song.duration)==1 ){
-        this.songStatus = false;
-        this.$emit('nextSong');
-      }}
     },
 
     addEvent() {
@@ -158,17 +112,15 @@ export default {
     playPause() {
       const song = this.$refs.song;
       if (this.songStatus) {
-        song.pause();
+        playerPause();
         this.songStatus = !this.songStatus;
         sessionStorage.setItem('songStatus', 'pause');
       } else {
-        song.play();
+        playerPlay();
         this.songStatus = !this.songStatus;
         sessionStorage.setItem('songStatus', 'play');
       }
     },
-
-    
   }
 };
 </script>

@@ -1,7 +1,7 @@
 import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 
 var state = generateRandomString(16);
-var scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming';
+var scope = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming user-top-read';
 
 
 export function userLogin(){
@@ -19,7 +19,7 @@ export function userLogin(){
     'user-read-playback-state',
     'user-modify-playback-state',
     'app-remote-control',
-    'streaming'
+    'streaming','user-top-read'
   ];
   // window.location=`${authEndpoint}?client_id=${CLIENT_ID}?response_type=code&redirect_uri=${redirectUri}&scope=${scopes.join(
   //   "%20"

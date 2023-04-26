@@ -70,7 +70,7 @@
           <div class="songs">
             <div
               class="recommended-song-row"
-              v-for="quick_pick in api_data['data']['tracks']|| []"
+              v-for="quick_pick in api_data['data']['items']|| []"
               @click="playSong(quick_pick)"
             >
               <div class="song">
@@ -130,4 +130,4 @@ export default{
         }
     }
 }
-</script>
+</script> 
