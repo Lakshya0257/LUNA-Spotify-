@@ -25,7 +25,7 @@ export async function getRecommendations(){
             const error_response=await APIException(e);
             if(error_response==='token'){
               console.log('success 2')
-                await getRecommendations();
+                return await getRecommendations();
             }
         });
         if(apiResponse!=={}){
