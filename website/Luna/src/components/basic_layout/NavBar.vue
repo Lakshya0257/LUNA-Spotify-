@@ -44,7 +44,7 @@ export default {
     width: 100px;
     padding-top: 4vh;
     z-index: 5;
-    background-color: rgb(16, 16, 16);
+    background-color: rgba(16, 16, 16, 0.437);
 }
 
 .nav-bar h2{

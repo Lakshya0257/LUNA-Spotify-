@@ -1,35 +1,27 @@
 <template>
   <main>
-    <HomepageContent @playSong="fetchSong"/>
+    <HomepageContent @playSong="fetchSong" />
     <Transition name="player">
-      <MusicPlayer v-if="musicPlaying" :muiscUrl="muiscUrl" :songData="song_data" ref="player_component" :queue_data="queue_data" :song_index="song_index" />
+      <MusicPlayer
+        v-if="musicPlaying"
+        :songData="song_data"
+        ref="player_component"
+      />
     </Transition>
   </main>
-
 </template>
-
-
-
-
-
-
 
 <script>
 import MusicRow from '../components/music/MusicRow.vue';
 import HomepageContent from '../components/HomepageContent.vue';
 import MusicPlayer from '../components/music_player/MusicPlayer.vue';
-import axios from 'axios';
-import { getPlayer ,playSong } from '../../spotify/play_track/player';
+import { getPlayer, playSong } from '../../spotify/play_track/player';
 
 export default {
   data() {
     return {
-      
       musicPlaying: false,
-      muiscUrl:'',
-      song_data:{},
-      queue_data:{},
-      song_index:1
+      song_data: {}
     };
   },
   components: {
@@ -37,26 +29,18 @@ export default {
     MusicPlayer,
     HomepageContent
   },
-  methods:{
-    fetchSong(videoUrl){
-      this.musicPlaying=false;
-      console.log('waiting')
-      console.log(videoUrl['uri']);
-      playSong(videoUrl['uri']);
-      this.song_data=videoUrl;
-      this.musicPlaying=true;
-    },
+  methods: {
+    async fetchSong(songData) {
+      this.musicPlaying = false;
+      console.log(songData);
+      console.log(songData['uri']);
+      await playSong(songData, 'onUserClick');
+      this.song_data = songData;
+      this.musicPlaying = true;
+    }
   }
 };
 </script>
-
-
-
-
-
-
-
-
 
 <style>
 .player-enter-active,

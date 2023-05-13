@@ -20,14 +20,15 @@ export async function getRecommendations(){
           console.log(response);
           apiResponse= response
         })
-        .catch(e => {
+        .catch(async e => {
           console.log(e);
-            const error_response=APIException(e);
+            const error_response=await APIException(e);
             if(error_response==='token'){
-                getRecommendations();
+              console.log('success 2')
+                await getRecommendations();
             }
         });
-        if(apiResponse!={}){
+        if(apiResponse!=={}){
             return apiResponse
         }
 }

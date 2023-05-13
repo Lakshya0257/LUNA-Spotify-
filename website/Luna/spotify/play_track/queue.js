@@ -1,4 +1,7 @@
+import axios from "axios";
+
 export async function getQueue(track,artist){
+  console.log('getting queue');
     const token=localStorage.getItem('access_token');
     const authHeader = {
         'Authorization': `Bearer ${token}`
@@ -15,14 +18,14 @@ export async function getQueue(track,artist){
           params:params
         })
         .then(response => {
-          console.log(response);
+          console.log(`Queue: ${response}`);
           apiResponse= response
         })
-        .catch(e => {
+        .catch(async e => {
           console.log(e);
-            const error_response=APIException(e);
+            const error_response=await APIException(e);
             if(error_response==='token'){
-                getRecommendations();
+                getQueue();
             }
         });
         if(apiResponse!={}){

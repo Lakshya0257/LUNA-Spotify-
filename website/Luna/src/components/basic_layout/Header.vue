@@ -51,7 +51,7 @@ export default{
     justify-content: space-between;
     align-items: center;
     z-index: 5;
-    background-color: black;
+    background-color: rgba(21, 21, 21, 0.678);
 
 }
 .middle-container{

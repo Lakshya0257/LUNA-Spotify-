@@ -34,7 +34,7 @@
     right: 0;
     bottom: 0;
     top: 8vh;
-    background-color: rgb(21, 21, 21);
+    background-color: rgba(21, 21, 21, 0.537);
     width: 18vw;
     padding-top: 20px;
     

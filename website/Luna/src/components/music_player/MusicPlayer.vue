@@ -2,13 +2,13 @@
   <div class="music_player">
     <div class="song-info" onclick="musicPlayer(event)">
       <img
-        :src="songData.album.images[0].url"
+        :src="thumbnail"
         alt=""
         id="song-image"
       />
       <div>
-        <h1>{{ songData.name }}</h1>
-        <p>{{ songData.artists[0].name }}</p>
+        <h1 id="song-name">{{ name }}</h1>
+        <p id="song-artist">{{ artist }}</p>
       </div>
     </div>
 
@@ -57,9 +57,33 @@
 
 
 <script>
+import { ref } from 'vue';
 import { playerPlay , playerPause} from '../../../spotify/play_track/player';
+import eventBus from '../../../event_bus/event_bus';
 export default {
-  props: ['songData','queue_data','muiscUrl'],
+  props: {
+    songData:{
+      type:Object,
+      required:true
+    },
+  },
+  setup(props){
+    const thumbnail=ref(props.songData.album.images[0].url);
+    const name=ref(props.songData.name);
+    const artist=ref(props.songData.artists[0].name);
+
+    eventBus.on('nextSong',(data)=>{
+      thumbnail.value=data.album.images[0].url;
+      name.value=data.name;
+      artist.value=data.artists[0].name;
+    });
+
+    return{
+      thumbnail,
+      name,
+      artist
+    };
+  },
   data() {
     return {
       songStatus: true,
@@ -68,49 +92,13 @@ export default {
       
     };
   },
-  mounted() {    
+  mounted() {
+    // this.url=this.songData.album.images[0].url;
+    // this.name=this.songData.name;
+    // this.artist=this.songData.artists[0].name
   },
   methods: {
-    forceStop() {
-      if (this.songStatus) {
-        console.log('running');
-        this.songStatus = false;
-      }
-    },
-
-    updateEndingTime() {
-      const progressBarValue = this.$refs.progressBar;
-      const song = this.$refs.song;
-      progressBarValue.max = song.duration;
-      let minutes = Math.floor(song.duration / 60);
-      let seconds = Math.round(song.duration - minutes * 60);
-      this.endingTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    },
-
-    addEvent() {
-      this.$refs.song.addEventListener('timeupdate', this.updateTime);
-    },
-    removeEvent() {
-      this.$refs.song.removeEventListener('timeupdate', this.updateTime);
-    },
-
-    handleProgressInput() {
-      const song = this.$refs.song;
-      const progressBarValue = this.$refs.progressBar;
-      song.currentTime = progressBarValue.value;
-      let minutes = Math.floor(song.currentTime / 60);
-      let seconds = Math.round(song.currentTime - minutes * 60);
-      this.currentTime = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-      progressBarValue.style.background =
-        'linear-gradient(to right, green, ' +
-        (song.currentTime / song.duration) * 100 +
-        '%, grey ' +
-        (song.currentTime / song.duration) * 100 +
-        '%)';
-    },
-
     playPause() {
-      const song = this.$refs.song;
       if (this.songStatus) {
         playerPause();
         this.songStatus = !this.songStatus;
