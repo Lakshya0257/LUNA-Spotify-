@@ -1,6 +1,6 @@
 <template>
   <div class="music_player">
-    <div class="song-info" onclick="musicPlayer(event)">
+    <div class="song-info" @click="playerPage()">
       <img
         :src="thumbnail"
         alt=""
@@ -14,7 +14,6 @@
 
     <div class="main-controls">
       <div>
-        <!-- <i class="fa-regular fa-heart"></i> -->
         <i class="fa-solid fa-backward" onclick="jumpToPrevious()"></i>
         <div class="play">
           <i
@@ -31,7 +30,6 @@
           ></i>
         </div>
         <i class="fa-solid fa-forward" onclick="jumpToNext()"></i>
-        <!-- <i class="fa-solid fa-repeat"></i> -->
       </div>
     </div>
     <div class="timeline">
@@ -41,9 +39,7 @@
         value="0"
         ref="progressBar"
         id="progressBar" min="0" max="100"
-        @input="handleProgressInput"
-        @mousedown="removeEvent"
-        @mouseup="addEvent"
+        @change="seekSong()" @mousedown="forceUpdate(false)" @mouseup="forceUpdate(true)"
       />
       <p class="ending-time" id="finalTime">00:00</p>
     </div>
@@ -58,7 +54,8 @@
 
 <script>
 import { ref } from 'vue';
-import { playerPlay , playerPause} from '../../../spotify/play_track/player';
+import store from '../../stores/store';
+import { playerPlay , playerPause, seekPlayerSong, forceTimeUpdation} from '../../../spotify/play_track/player';
 import eventBus from '../../../event_bus/event_bus';
 export default {
   props: {
@@ -87,17 +84,30 @@ export default {
   data() {
     return {
       songStatus: true,
-      endingTime: '00:00',
-      currentTime: '00:00',
-      
     };
   },
   mounted() {
-    // this.url=this.songData.album.images[0].url;
-    // this.name=this.songData.name;
-    // this.artist=this.songData.artists[0].name
+    const status=sessionStorage.getItem('songStatus');
+    if(status==='pause'){
+      this.songStatus=false;
+    }else if(status==='play'){
+      this.songStatus=true;
+    }
   },
   methods: {
+    playerPage(){
+      store.dispatch('setData', this.songData);
+      this.$router.push({
+        name: "player"
+      });
+    },
+    seekSong(){
+      seekPlayerSong(document.getElementById('progressBar').value);
+
+    },
+    forceUpdate(value){
+      forceTimeUpdation(value);
+    },
     playPause() {
       if (this.songStatus) {
         playerPause();
@@ -113,7 +123,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .music_player {
   display: flex;
   z-index: 6;

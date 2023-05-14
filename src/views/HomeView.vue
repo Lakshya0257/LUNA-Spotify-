@@ -1,6 +1,9 @@
 <template>
   <main>
-    <HomepageContent @playSong="fetchSong" />
+    <Header />
+    <NavBar />
+    <!-- <SideBar /> -->
+    <RouterView  @playSong="fetchSong" />
     <Transition name="player">
       <MusicPlayer
         v-if="musicPlaying"
@@ -12,10 +15,17 @@
 </template>
 
 <script>
+import Header from '../components/basic_layout/Header.vue';
+import NavBar from '../components/basic_layout/NavBar.vue';
+import SideBar from '../components/basic_layout/SideBar.vue';
 import MusicRow from '../components/music/MusicRow.vue';
 import HomepageContent from '../components/HomepageContent.vue';
 import MusicPlayer from '../components/music_player/MusicPlayer.vue';
-import { getPlayer, playSong } from '../../spotify/play_track/player';
+import {
+  getPlayer,
+  playSong,
+  getCurrentSong
+} from '../../spotify/play_track/player';
 
 export default {
   data() {
@@ -27,7 +37,10 @@ export default {
   components: {
     MusicRow,
     MusicPlayer,
-    HomepageContent
+    HomepageContent,
+    Header,
+    NavBar,
+    SideBar
   },
   methods: {
     async fetchSong(songData) {
@@ -36,6 +49,15 @@ export default {
       console.log(songData['uri']);
       await playSong(songData, 'onUserClick');
       this.song_data = songData;
+      this.musicPlaying = true;
+    }
+  },
+  mounted() {
+    let currentSong = getCurrentSong();
+    console.log('currentSongddd');
+    console.log(currentSong);
+    if (Object.keys(currentSong).length !== 0) {
+      this.song_data = currentSong;
       this.musicPlaying = true;
     }
   }
@@ -73,6 +95,7 @@ export default {
   height: 19px;
   padding: 10px 12px;
   margin-right: 10px;
+  margin-bottom: 2vh;
   background-color: rgba(128, 128, 128, 0.163);
   border: solid 1px rgb(50, 50, 50);
   border-radius: 12px;
@@ -81,6 +104,7 @@ export default {
 .second_row .genre h1 {
   width: 100%;
   display: block;
+  margin-bottom: 15px;
 }
 
 .second_row .genre .category p {

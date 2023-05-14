@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { APIException } from '../../error_handler/error_handler';
 
-export async function getRecommendations(){
+export async function getRecommendationsArtist(){
     const token=localStorage.getItem('access_token');
     const authHeader = {
         'Authorization': `Bearer ${token}`
@@ -12,7 +12,7 @@ export async function getRecommendations(){
     };
     let apiResponse={};
       await axios
-        .get('https://api.spotify.com/v1/me/top/tracks', {
+        .get('https://api.spotify.com/v1/me/top/artists', {
           headers: authHeader,
           params:params
         })
@@ -25,7 +25,7 @@ export async function getRecommendations(){
             const error_response=await APIException(e);
             if(error_response==='token'){
               console.log('success 2')
-                return await getRecommendations();
+                return await getRecommendationsArtist();
             }
         });
         if(Object.keys(apiResponse).length !== 0){

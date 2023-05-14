@@ -47,30 +47,20 @@
 
       <div class="second_row">
         <div class="genre">
-          <h1>For You</h1>
-          <!-- <div
+          <h1>Genre</h1>
+          <div
             class="category"
-            v-for="genre in api_data['data']['genre']['For you']|| []"
+            v-for="genre in genre.data.genres|| []"
           >
-            <p>{{ genre['title'] }}</p>
-          </div> -->
-          <h1>
-            <br />
-            Moods & moments
-          </h1>
-          <!-- <div
-            class="category"
-            v-for="genre in api_data['data']['genre']['Moods & moments']|| []"
-          >
-            <p>{{ genre['title'] }}</p>
-          </div> -->
+            <p>{{ genre }}</p>
+          </div>
         </div>
         <div class="quick-picks">
           <h1>Quick Picks</h1>
           <div class="songs">
             <div
               class="recommended-song-row"
-              v-for="quick_pick in api_data['data']['items']|| []"
+              v-for="quick_pick in quickPicks['data']['items']|| []"
               @click="playSong(quick_pick)"
             >
               <div class="song">
@@ -90,15 +80,15 @@
           </div>
         </div>
         <div class="artists">
-          <!-- <img
+          <img
             class="artist_img"
-            v-for="artist in api_data['data']['artists'] || []"
-            :src="artist.thumbnails[0].url"
+            v-for="artist in artists['data']['items'] || []"
+            :src="artist.images[0].url"
             alt=""
-          /> -->
+          />
         </div>
       </div>
-      <!-- <MusicRow v-for="data in api_data['data']['homeData']" :row_heading="data.title" :contents="data.contents" /> -->
+      <!-- <MusicRow v-for="data in quickPicks['data']['homeData']" :row_heading="data.title" :contents="data.contents" /> -->
       
     </div>
 </template>
@@ -108,11 +98,13 @@
 import axios from 'axios';
 import MusicRow from './music/MusicRow.vue';
 import { getRecommendations} from '../../spotify/home/recommended_songs'
+import { getRecommendationsArtist } from '../../spotify/home/recommended_artists';
+import { getGenre } from '../../spotify/home/get_genre'
 export default{
     data(){
         return{
-            api_data: {
-      },
+            quickPicks: {
+      },artists:{},genre:{},
       api_done:false,
         }
     },
@@ -120,12 +112,15 @@ export default{
         MusicRow
     },
     async created(){
-      this.api_data= await getRecommendations();
-      console.log(this.api_data);
+      this.quickPicks= await getRecommendations();
+      this.artists= await getRecommendationsArtist();
+      this.genre= await getGenre();
+      console.log(this.artists);
       this.api_done=true;
     },
     methods:{
         playSong(videoUrl){
+          sessionStorage.setItem('songStatus', 'play');
             this.$emit('playSong',videoUrl);
         }
     }

@@ -1,20 +1,15 @@
 import axios from 'axios';
 import { APIException } from '../../error_handler/error_handler';
 
-export async function getRecommendations(){
+export async function getGenre(){
     const token=localStorage.getItem('access_token');
     const authHeader = {
         'Authorization': `Bearer ${token}`
     };
-    const params={
-        limit:30,
-        time_range:'medium_term',
-    };
     let apiResponse={};
       await axios
-        .get('https://api.spotify.com/v1/me/top/tracks', {
+        .get('https://api.spotify.com/v1/recommendations/available-genre-seeds', {
           headers: authHeader,
-          params:params
         })
         .then(response => {
           console.log(response);
@@ -25,7 +20,7 @@ export async function getRecommendations(){
             const error_response=await APIException(e);
             if(error_response==='token'){
               console.log('success 2')
-                return await getRecommendations();
+                return await getGenre();
             }
         });
         if(Object.keys(apiResponse).length !== 0){

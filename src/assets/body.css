@@ -5,7 +5,8 @@
     position: absolute;
     bottom: 0;
     top: 8vh;
-    right: 18vw;
+    right: 0;
+    /* right: 18vw; */
     left: 100px;
     z-index: 2;
     padding-left:4vw;

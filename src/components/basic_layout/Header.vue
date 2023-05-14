@@ -1,19 +1,20 @@
 <template>
     <header class="header">
         <div class="middle-container">
-          <i class="fa-solid fa-magnifying-glass" onclick="search()"></i>
+          <i class="fa-solid fa-magnifying-glass" @click="search"></i>
           <input class="search" type="text" placeholder="Search for song, artist, lyrics..." id="search-input" />
         </div>
         <div class="end-container">
           <i class="fa-regular fa-bell"></i>
           <img class="profile-img" src="https://www.readersdigest.ca/wp-content/uploads/2019/11/cat-10-e1573844975155.jpg" alt="profile-img" />
-          <p class="user-name">Alex</p>
+          <p class="user-name">Lakshya</p>
         </div>
       </header>
 </template>
 
 
 <script>
+import { userSearch } from '../../../spotify/search/search';
 export default{
 
     //parsing data
@@ -33,6 +34,15 @@ export default{
 
     //functions
     methods:{
+        async search(){
+            const value=document.getElementById('search-input').value;
+            this.$router.push({
+        name: "search",
+        params: {
+          id: value,
+        },
+      });
+        }
 
     }
 }

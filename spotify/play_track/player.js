@@ -6,7 +6,6 @@ window.addEventListener('beforeunload', event => {
   player.disconnect();
 });
 
-
 //All the variable declarations.
 let songPlaying = false;
 let queueData = {};
@@ -14,15 +13,19 @@ let index = 0;
 const timeoutIds = [];
 let player = null;
 let deviceId = null;
+let currentSong = {};
 
 //Initializing player
 export const getPlayer = () => {
   return player;
 };
 
-
-
-
+export const getPrebuiltQueue = () => {
+  return queueData;
+};
+export const getCurrentSong = () => {
+  return currentSong;
+};
 
 //Player play-pause functions.
 //Just import it anywhere and call to play and pause the song
@@ -33,19 +36,18 @@ export const playerPause = () => {
 export const playerPlay = () => {
   player.resume();
   songPlaying = true;
+  updateTime();
 };
-
-
 
 // Clear all setTimeout functions
 function terminateUpdatetime() {
   timeoutIds.forEach(id => clearTimeout(id));
 }
 
-
 //playing song
-export const playSong = async (data, via) => {
+export const playSong = async (data, via, inde) => {
   terminateUpdatetime();
+  currentSong = data;
 
   //Checking if song is played by user or autoplayed via queue.
   if (via === 'onUserClick') {
@@ -53,15 +55,15 @@ export const playSong = async (data, via) => {
   } else if (via === 'autoplay') {
     eventBus.emit('nextSong', data);
     index = index + 1;
+  } else if (via === 'queueClick') {
+    index = inde + 1;
   }
-
 
   const uri = data['uri'];
   player.activateElement();
   if (player) {
     console.log('playing');
     const token = localStorage.getItem('access_token');
-    // Call the player's methods to play the song
     const play = ({
       spotify_uri,
       playerInstance: {
@@ -79,7 +81,23 @@ export const playSong = async (data, via) => {
               Authorization: `Bearer ${token}`
             }
           }
-        );
+        )
+          .then(response => {
+            if (response.ok) {
+              console.log('Song played successfully');
+            } else {
+              throw new Error('Failed to play song');
+            }
+          })
+          .catch(error => {
+            if (error.response && error.response.status === 502) {
+              console.log('Something happened! Trying again.');
+              index = index - 1;
+            } else {
+              console.error('Error playing song:', error);
+              playSong(data, 'autoplay');
+            }
+          });
       });
     };
     play({
@@ -91,6 +109,7 @@ export const playSong = async (data, via) => {
     player.addListener(
       'player_state_changed',
       ({ position, duration, track_window: { current_track } }) => {
+        
         if (position === 0) {
           songPlaying = true;
           updateTime();
@@ -104,18 +123,37 @@ export const playSong = async (data, via) => {
       console.log('Queue');
       console.log(queueData);
     }
+    if (index >= queueData.data.tracks.length - 4) {
+      const queueD = await getQueue(data['id'], data['artists'][0]['id']);
+      await queueD.data.tracks.forEach(element => {
+        const existsInX = queueData.data.tracks.some(
+          xItem => xItem.uri === element.uri
+        );
+        // If the item doesn't exist in x, add it
+        if (!existsInX) {
+          queueData.data.tracks.push(element);
+        }
+      });
+      // await queueD.data.tracks.forEach(track=>{
+      //   queueData.data.tracks.push(track);
+      // });
+      eventBus.emit('queueUpdate', queueData);
+    }
   } else {
     console.error('Player is not available.');
   }
 };
-
-
 
 //Update time function
 //Responsible for updating the sequence and progress of the song.
 //Also responsible for auto playback.
 const updateTime = async () => {
   let progressBar = document.getElementById('progressBar');
+  // if(window.location.pathname === '/'){
+  //   progressBar =
+  // }else{
+  //   progressBar = document.getElementById('PlayerProgressBar');
+  // }
   await player
     .getCurrentState()
     .then(state => {
@@ -158,7 +196,23 @@ const updateTime = async () => {
   }
 };
 
+export const forceTimeUpdation = value => {
+  songPlaying = value;
+  if (songPlaying) {
+    updateTime();
+  }
+};
 
+//seek through progressBar
+export const seekPlayerSong = async value => {
+  // const value=document.getElementById('progressBar').value;
+  // songPlaying=false;
+  console.log(value);
+  const seekValue = (currentSong.duration_ms * value) / 100;
+  await player.seek(seekValue).then(() => {
+    console.log('Changed position!');
+  });
+};
 
 //Initializing the spotify player.
 //This is the main entry point where user will create an auto instance of spotify SDK.
