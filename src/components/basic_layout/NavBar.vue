@@ -1,35 +1,54 @@
 <template>
     <nav class="nav-bar">
         <h2>L</h2>
-        <button class="nav-button">
-          <i class="fa-solid fa-house"></i>
+        <button class="nav-button" 
+      @click="navigateTo('home')">
+          <i class="fa-solid fa-house" :class="{ active: isActiveRoute('home') }"></i>
           
         </button>
-        <button class="nav-button">
-          <i class="fa-solid fa-music"></i>
+        <button class="nav-button" 
+      @click="navigateTo('home')">
+          <i class="fa-solid fa-music" :class="{ active: isActiveRoute('undefined') }"></i>
           
         </button>
-        <button class="nav-button">
-          <i class="fa-solid fa-record-vinyl"></i>
+        <button class="nav-button" 
+      @click="navigateTo('home')">
+          <i class="fa-solid fa-record-vinyl" :class="{ active: isActiveRoute('undefined') }"></i>
           
         </button>
-        <button class="nav-button">
-          <i class="fa-solid fa-icons"></i>
+        <button class="nav-button" 
+      @click="navigateTo('home')">
+          <i class="fa-solid fa-icons" :class="{ active: isActiveRoute('undefined') }"></i>
           
         </button>
-        <button class="nav-button">
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <button class="nav-button" 
+      @click="navigateTo('search')">
+          <i class="fa-solid fa-magnifying-glass" :class="{ active: isActiveRoute('search') }"></i>
         </button>
-        <button class="nav-button">
-          <i class="fa-regular fa-heart"></i>
+        <button class="nav-button" 
+      @click="navigateTo('home')">
+          <i class="fa-regular fa-heart" :class="{ active: isActiveRoute('undefined') }"></i>
         </button>
       </nav>
 </template>
 
 <script>
+import { mapState } from 'vuex'; // Optional, if you are using Vuex
+
 export default {
+  computed: {
+    ...mapState(['currentRoute']), // Optional, if you are using Vuex
     
-}
+  },
+  methods: {
+    isActiveRoute(name) {
+      return this.$route.name === name; // Replace 'currentRoute' with your actual route name
+    },
+    navigateTo(routeName) {
+      this.$router.push({ name: routeName });
+    },
+  },
+};
 </script>
 
 <style>
@@ -45,6 +64,10 @@ export default {
     padding-top: 4vh;
     z-index: 5;
     background-color: rgba(16, 16, 16, 0.437);
+}
+
+.fa-solid.active {
+  color: green;
 }
 
 .nav-bar h2{

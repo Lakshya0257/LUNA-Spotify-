@@ -3,6 +3,7 @@ import { APIException } from '../../error_handler/error_handler';
 
 export async function getRecommendations(){
     const token=localStorage.getItem('access_token');
+    let errorResponse;
     const authHeader = {
         'Authorization': `Bearer ${token}`
     };
@@ -22,13 +23,11 @@ export async function getRecommendations(){
         })
         .catch(async e => {
           console.log(e);
-            const error_response=await APIException(e);
-            if(error_response==='token'){
-              console.log('success 2')
-                return await getRecommendations();
-            }
+            errorResponse=await APIException(e);
         });
         if(Object.keys(apiResponse).length !== 0){
             return apiResponse
+        }else if(errorResponse==='token'){
+          return await getRecommendations();
         }
 }

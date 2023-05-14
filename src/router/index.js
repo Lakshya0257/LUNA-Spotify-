@@ -21,6 +21,7 @@ const router = createRouter({
           path:'search/:id',
           name:'search',
           component: Search,
+          props:true,
         }
       ]
       

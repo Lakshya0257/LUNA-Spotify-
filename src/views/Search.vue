@@ -61,7 +61,7 @@
       <div class="album" v-for="artist in search.data.artists.items">
         <div class="artist">
           <img
-            :src="artist.images[0].url"
+          :src="artist.images[0]?.url ?? 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80'"
             alt=""
           />
         </div>
@@ -87,6 +87,14 @@ export default{
         this.search=await userSearch();
         this.data=true
     },
+    async beforeRouteUpdate(to, from, next) {
+    console.log('Component re-rendered');
+    this.data=false;
+    this.id=this.$route.params.id;
+        this.search=await userSearch();
+        this.data=true
+    next();
+  },
     methods:{
       playSong(videoUrl){
           sessionStorage.setItem('songStatus', 'play');
