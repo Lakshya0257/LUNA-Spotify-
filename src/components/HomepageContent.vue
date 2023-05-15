@@ -95,7 +95,6 @@
 
 
 <script>
-import axios from 'axios';
 import MusicRow from './music/MusicRow.vue';
 import { getRecommendations} from '../../spotify/home/recommended_songs'
 import { getRecommendationsArtist } from '../../spotify/home/recommended_artists';
@@ -117,19 +116,6 @@ export default{
       this.genre= await getGenre();
       console.log(this.artists);
       this.api_done=true;
-      // const response=await getRecommendations();
-      // if(response==='Regenerated'){
-      //   this.quickPicks= await getRecommendations();
-      //   this.artists= await getRecommendationsArtist();
-      // this.genre= await getGenre();
-      // this.api_done=true;
-      // }else{
-      //   this.quickPicks=response;
-      //   this.artists= await getRecommendationsArtist();
-      // this.genre= await getGenre();
-      // this.api_done=true;
-
-      // }
     },
     methods:{
         playSong(videoUrl){
