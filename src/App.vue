@@ -18,7 +18,7 @@ import SideBar from './components/basic_layout/SideBar.vue';
 import { userLogin } from '../spotify/auth/auth'
 import { generateAccessToken } from '../spotify/token/auth_token'
 
-    
+  
 export default {
   components: {
     Header,
