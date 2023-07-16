@@ -43,6 +43,7 @@ export const playerPlay = () => {
 function terminateUpdatetime() {
   timeoutIds.forEach(id => clearTimeout(id));
 }
+let retry=0;
 
 //playing song
 export const playSong = async (data, via, inde) => {
@@ -93,7 +94,12 @@ export const playSong = async (data, via, inde) => {
             if (error.response && error.response.status === 502) {
               console.log('Something happened! Trying again.');
               index = index - 1;
-            } else {
+            }
+            else if(retry===3) {
+              console.log('You dont have permission to access this, please purchase a subscription');
+            }
+             else {
+              retry++;
               console.error('Error playing song:', error);
               playSong(data, 'autoplay');
             }
