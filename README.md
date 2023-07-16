@@ -1,6 +1,10 @@
 # Luna
 
-A music streaming website built on Vuejs 3 with Spotify Api.
+A music streaming desktop application made in tauri rust and vuejs.
+
+## Note
+It is not standalone desktop application, hence requires the server to run while using the application because of sporify redirect uri condition.
+
 But make sure you have a premium account for the website to be fully running. Free Trial accounts are not included.
 
 ## Features
@@ -53,13 +57,13 @@ npm install
 ### Compile and Hot-Reload for Development
 
 
-npm run dev
+npm tauri dev
 
 
 ### Compile and Minify for Production
 
 
-npm run build
+npm tauri build
 
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
