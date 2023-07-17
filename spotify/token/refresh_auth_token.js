@@ -36,7 +36,7 @@ import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 import { generateToken } from './auth_token';
 
 export async function generateAccessToken() {
-  if(localStorage.getItem('refresh_token')==="null"){
+  if(localStorage.getItem('refresh_token')===null){
     await generateToken();
   }
   const params = new URLSearchParams();

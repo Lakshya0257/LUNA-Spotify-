@@ -2,7 +2,6 @@ import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 import axios from 'axios';
 
 export async function generateToken(){
-  console.log('trying');
     const params = new URLSearchParams();
       params.append('grant_type', 'authorization_code');
       params.append('code', localStorage.getItem('code'));
@@ -11,7 +10,7 @@ export async function generateToken(){
       params.append('redirect_uri', REDIRECT_URI);
       params.append('scope', 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state app-remote-control streaming user-top-read'
       );
-      axios 
+      await axios 
         .post('https://accounts.spotify.com/api/token', params, {
           headers: {
             'Authorization': 'Basic ' + btoa(CLIENT_ID + ':' + CLIENT_SECRET),

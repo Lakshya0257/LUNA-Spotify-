@@ -28,6 +28,7 @@ export async function getRecommendations(){
         if(Object.keys(apiResponse).length !== 0){
             return apiResponse
         }else if(errorResponse==='token'){
+          console.log("pppppp");
           return await getRecommendations();
         }
 }
