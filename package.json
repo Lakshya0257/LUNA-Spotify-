@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite && npm run build:css",
+    "build": "vite build",
     "preview": "vite preview",
     "build:css": "tailwindcss build src/assets/global.css -o src/assets/css/tailwind.css",
     "test:unit": "vitest --environment jsdom"
