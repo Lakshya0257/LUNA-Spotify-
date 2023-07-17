@@ -2,9 +2,10 @@
 
 A music streaming desktop application made in tauri rust and vuejs.
 
-
-
 But make sure you have a premium account for the website to be fully running. Free Trial accounts are not included.
+
+## Dev mode 
+If wanted to contribute then clone the repo and in config.js file uncomment localhost uri and comment out the production uri for dev mode
 
 ## Features
 
