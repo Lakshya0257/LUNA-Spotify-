@@ -2,8 +2,7 @@
 
 A music streaming desktop application made in tauri rust and vuejs.
 
-## Note
-It is not standalone desktop application, hence requires the server to run while using the application because of sporify redirect uri condition.
+
 
 But make sure you have a premium account for the website to be fully running. Free Trial accounts are not included.
 
