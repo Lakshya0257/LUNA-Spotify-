@@ -101,11 +101,8 @@ export const playSong = async (data, via, inde) => {
           .catch(error => {
             if (error.response && error.response.status === 502) {
               console.log('Failed to play song');
-              // retry++;
-              // console.error('Error playing song:', error);
-              // playSong(data, 'retry');
             }
-            else if(retry>=3) {
+            else if(retry===3) {
               console.log('You dont have permission to access this, please purchase a subscription');
             }
              else {
