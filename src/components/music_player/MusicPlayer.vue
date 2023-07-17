@@ -14,7 +14,7 @@
 
     <div class="main-controls">
       <div>
-        <i class="fa-solid fa-backward" onclick="jumpToPrevious()"></i>
+        <i class="fa-solid fa-backward" @click="previous()"></i>
         <div class="play">
           <i
             v-if="!songStatus"
@@ -29,7 +29,7 @@
             id="playButton"
           ></i>
         </div>
-        <i class="fa-solid fa-forward" onclick="jumpToNext()"></i>
+        <i class="fa-solid fa-forward" @click="next()"></i>
       </div>
     </div>
     <div class="timeline">
@@ -54,8 +54,7 @@
 
 <script>
 import { ref } from 'vue';
-import store from '../../stores/store';
-import { playerPlay , playerPause, seekPlayerSong, forceTimeUpdation} from '../../../spotify/play_track/player';
+import { playerPlay , playerPause, seekPlayerSong, forceTimeUpdation, jumptoprevious, jumptonext} from '../../../spotify/play_track/player';
 import eventBus from '../../../event_bus/event_bus';
 export default {
   props: {
@@ -73,6 +72,7 @@ export default {
       thumbnail.value=data.album.images[0].url;
       name.value=data.name;
       artist.value=data.artists[0].name;
+      // props.songData=data;
     });
 
     return{
@@ -95,8 +95,14 @@ export default {
     }
   },
   methods: {
-    playerPage(){
-      store.dispatch('setData', this.songData);
+    async next(){
+      jumptonext();
+    },
+    async previous(){
+      jumptoprevious();
+    },
+    async playerPage(){
+      // await store.dispatch('setData', this.songData);
       this.$router.push({
         name: "player"
       });

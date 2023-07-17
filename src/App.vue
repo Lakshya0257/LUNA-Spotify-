@@ -16,7 +16,7 @@ import NavBar from './components/basic_layout/NavBar.vue';
 import SideBar from './components/basic_layout/SideBar.vue';
 
 import { userLogin } from '../spotify/auth/auth'
-import { generateAccessToken } from '../spotify/token/auth_token'
+import { generateToken } from '../spotify/token/auth_token'
 
   
 export default {
@@ -25,18 +25,19 @@ export default {
     NavBar,
     SideBar
   },
-  created() {
+  async created() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
     localStorage.setItem('code',code);
+    console.log(code+"------------------------------");
     if (localStorage.getItem('code') === 'null') {
       userLogin();
     }
 
     if (localStorage.getItem('access_token') === 'null') {
       console.log('running...');
-      generateAccessToken();
+      await generateToken();
     }
   },
   methods: {

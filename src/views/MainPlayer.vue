@@ -25,7 +25,7 @@
         </div>
         <div class="player-main-controls">
           <!-- <i class="fa-regular fa-heart"></i> -->
-          <i class="fa-solid fa-backward"></i>
+          <i class="fa-solid fa-backward" @click="previous()"></i>
           <div class="play">
             <i
               v-if="!songStatus"
@@ -40,30 +40,32 @@
               id="playButton"
             ></i>
           </div>
-          <i class="fa-solid fa-forward"></i>
+          <i class="fa-solid fa-forward" @click="next()"></i>
           <!-- <i class="fa-solid fa-repeat"></i> -->
         </div>
       </div>
     </div>
   </div>
   <div class="lower-half">
-    <h1>Recommended Queue</h1>
-    <div class="queue">
-      <div
-        class="queue-song"
-        v-for="(song, index) in queue.data.tracks"
-        @click="fetchSong(song, index)"
-      >
-        <img :src="song.album.images[0].url" alt="" />
-        <p>{{ song.name }}</p>
-      </div>
+  <h1>Recommended Queue</h1>
+  <div class="queue">
+    <div
+      class="queue-song"
+      v-for="(song, index) in queue.data.tracks"
+      @click="fetchSong(song, index)"
+    >
+      <img v-if="song.album && song.album.images && song.album.images.length > 0" :src="song.album.images[0].url" alt="" />
+      <img v-else src="https://www.zarla.com/images/zarla-l-1x1-2400x2400-20211122-km66v83483bgp6y8jjck.png?crop=1:1,smart&width=250&dpr=2" alt="Fallback Image" />
+      <p>{{ song.name }}</p>
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
 import { ref } from 'vue';
-import { getPrebuiltQueue , seekPlayerSong, forceTimeUpdation} from '../../spotify/play_track/player';
+import { getPrebuiltQueue , seekPlayerSong, forceTimeUpdation, jumptonext , jumptoprevious} from '../../spotify/play_track/player';
 import {
   playerPause,
   playerPlay,
@@ -82,6 +84,7 @@ export default {
   },
   created() {
     this.img = this.$store.getters.getData.album.images[0].url;
+    console.log(this.img);
     this.name = this.$store.getters.getData.name;
     this.artist = this.$store.getters.getData.artists[0].name;
     this.queue = getPrebuiltQueue();
@@ -105,6 +108,12 @@ export default {
     });
   },
   methods: {
+    async next(){
+      jumptonext();
+    },
+    async previous(){
+      jumptoprevious();
+    },
     homepage() {
       this.$router.push({
         name: 'home'

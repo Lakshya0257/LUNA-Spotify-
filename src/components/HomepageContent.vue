@@ -4,7 +4,7 @@
         <Transition name="cards">
           <div class="artist">
           <img
-            src="https://images2.alphacoders.com/109/thumb-1920-1092063.jpg"
+            src="../../external_assets/TB1.jpg"
             alt=""
           />
           <div class="blur"></div>
@@ -15,7 +15,7 @@
         </Transition>
         <div class="artist">
           <img
-            src="https://thumbs.dreamstime.com/b/girl-listening-to-music-headphones-dark-colorful-background-cute-child-enjoying-happy-dance-looking-camera-smile-147034797.jpg"
+            src="../../external_assets/TB2.jpg"
             alt=""
           />
           <div class="blur"></div>
@@ -25,7 +25,7 @@
         </div>
         <div class="artist">
           <img
-            src="https://media.istockphoto.com/photos/young-woman-enjoying-music-picture-id628528054?k=6&m=628528054&s=170667a&w=0&h=XOOdGkVIukxG59x19Wec-ouspD6VaI1bSfpFbejbkbY="
+            src="../../external_assets/TB3.jpg"
             alt=""
           />
           <div class="blur"></div>
@@ -35,7 +35,7 @@
         </div>
         <div class="artist" style="margin-right: 0;">
           <img
-            src="https://i.pinimg.com/originals/14/a9/b7/14a9b7955593932d33e034dd632929f3.jpg"
+            src="../../external_assets/TB4.jpg"
             alt=""
           />
           <div class="blur"></div>

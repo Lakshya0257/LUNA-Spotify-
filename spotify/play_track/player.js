@@ -1,5 +1,6 @@
 import { getQueue } from './queue';
 import eventBus from '../../event_bus/event_bus';
+import store from '../../src/stores/store';
 
 //disconnecting player before user reload the page
 window.addEventListener('beforeunload', event => {
@@ -8,7 +9,11 @@ window.addEventListener('beforeunload', event => {
 
 //All the variable declarations.
 let songPlaying = false;
-let queueData = {};
+let queueData = {
+  "data":{
+    "tracks":[]
+  }
+};
 let index = 0;
 const timeoutIds = [];
 let player = null;
@@ -49,7 +54,7 @@ let retry=0;
 export const playSong = async (data, via, inde) => {
   terminateUpdatetime();
   currentSong = data;
-
+  await store.dispatch('setData', data);
   //Checking if song is played by user or autoplayed via queue.
   if (via === 'onUserClick') {
     index = 0;
@@ -59,6 +64,8 @@ export const playSong = async (data, via, inde) => {
   } else if (via === 'queueClick') {
     index = inde + 1;
   }
+
+  
 
   const uri = data['uri'];
   player.activateElement();
@@ -84,6 +91,7 @@ export const playSong = async (data, via, inde) => {
           }
         )
           .then(response => {
+            retry=0;
             if (response.ok) {
               console.log('Song played successfully');
             } else {
@@ -92,8 +100,9 @@ export const playSong = async (data, via, inde) => {
           })
           .catch(error => {
             if (error.response && error.response.status === 502) {
-              console.log('Something happened! Trying again.');
-              index = index - 1;
+              retry++;
+              console.error('Error playing song:', error);
+              playSong(data, 'retry');
             }
             else if(retry===3) {
               console.log('You dont have permission to access this, please purchase a subscription');
@@ -101,7 +110,7 @@ export const playSong = async (data, via, inde) => {
              else {
               retry++;
               console.error('Error playing song:', error);
-              playSong(data, 'autoplay');
+              playSong(data, 'retry');
             }
           });
       });
@@ -125,7 +134,19 @@ export const playSong = async (data, via, inde) => {
 
     //getting queue if user has played the song
     if (via === 'onUserClick') {
-      queueData = await getQueue(data['id'], data['artists'][0]['id']);
+      queueData = {
+        "data":{
+          "tracks":[]
+        }
+      };
+      console.log(data);
+      const queueD = await getQueue(data['id'], data['artists'][0]['id']);
+      await queueD.data.tracks.forEach(element => {
+        // If the item doesn't exist in x, add it
+        if (element.uri!==data.uri) {
+          queueData.data.tracks.push(element);
+        }
+      });
       console.log('Queue');
       console.log(queueData);
     }
@@ -149,6 +170,22 @@ export const playSong = async (data, via, inde) => {
     console.error('Player is not available.');
   }
 };
+
+export const jumptoprevious=()=>{
+  if(index!=0){
+    index=index-2;
+    songPlaying=false;
+    playerPause();
+    playSong(queueData['data']['tracks'][index], 'autoplay');
+  }
+}
+export const jumptonext=()=>{
+    // index=index+1;
+    songPlaying=false;
+    playerPause();
+    // console.log(index);
+    playSong(queueData['data']['tracks'][index], 'autoplay');
+}
 
 //Update time function
 //Responsible for updating the sequence and progress of the song.
@@ -224,42 +261,58 @@ export const seekPlayerSong = async value => {
 //This is the main entry point where user will create an auto instance of spotify SDK.
 //Must Remember- It requires an premium account for working. Free trial accounts are not acceptable.
 
+// Function to run the Spotify installation code
+function runSpotifyInstallation() {
+  console.log("Spotify");
+  // let loaded=false;
+  const script = document.createElement('script');
+  script.src = 'https://sdk.scdn.co/spotify-player.js';
+  script.onload = () => {
+    let token = localStorage.getItem('access_token');
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      // Define the Spotify Connect device, getOAuthToken has an actual token
+      // hardcoded for the sake of simplicity
+      player = new Spotify.Player({
+        name: 'A Spotify Web SDK Player',
+        getOAuthToken: callback => {
+          callback(token);
+        },
+        volume: 1
+      });
+      player.addListener('initialization_error', ({ message }) => {
+        console.error(message + " initialization_error");
+      });
+
+      player.addListener('authentication_error', ({ message }) => {
+        
+        // Re-run the Spotify installation code
+        // if(retry===3){
+        //   retry=0;
+          console.error(message + " authentication");
+        // }else{
+        //   retry++;
+        //   runSpotifyInstallation();
+        // }
+      });
+
+      player.addListener('account_error', ({ message }) => {
+        console.error(message + " account");
+      });
+
+      // Called when connected to the player created beforehand successfully
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        deviceId = device_id;
+      });
+      player.connect();
+    };
+  };
+  document.body.appendChild(script);
+}
+
 export default {
   install: (Vue, options) => {
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
-    script.onload = () => {
-      let token = localStorage.getItem('access_token');
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        // Define the Spotify Connect device, getOAuthToken has an actual token
-        // hardcoded for the sake of simplicity
-        player = new Spotify.Player({
-          name: 'A Spotify Web SDK Player',
-          getOAuthToken: callback => {
-            callback(token);
-          },
-          volume: 1
-        });
-        player.addListener('initialization_error', ({ message }) => {
-          console.error(message);
-        });
-
-        player.addListener('authentication_error', ({ message }) => {
-          console.error(message);
-        });
-
-        player.addListener('account_error', ({ message }) => {
-          console.error(message);
-        });
-
-        // Called when connected to the player created beforehand successfully
-        player.addListener('ready', ({ device_id }) => {
-          console.log('Ready with Device ID', device_id);
-          deviceId = device_id;
-        });
-        player.connect();
-      };
-    };
-    document.body.appendChild(script);
+    runSpotifyInstallation();
   }
 };
+

@@ -13,7 +13,10 @@ const store = createStore({
   },
   actions: {
     setData({ commit }, payload) {
-      commit('setData', payload)
+      return new Promise((resolve, reject) => {
+        commit('setData', payload)
+        resolve()
+      })
     }
   },
   getters: {

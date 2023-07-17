@@ -2,8 +2,9 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeBuildCommand": "cross-env BROWSER=none yarn build",
-    "beforeDevCommand": "yarn cross-env BROWSER=none yarn start",
-    "distDir": "../dist"
+    "beforeDevCommand": "yarn start",
+    "distDir": "../dist",
+    "devPath": "http://localhost:5173/"
   },
   "package": {
     "productName": "luna",
@@ -49,7 +50,16 @@
       }
     },
     "security": {
-      "csp": null
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "domain": "luna-5e3d7.web.app/*",
+          "windows": ["main"]
+        },
+        {
+          "domain": "https://luna-5e3d7.web.app?*",
+          "windows": ["main"]
+        }
+      ]
     },
     "updater": {
       "active": false

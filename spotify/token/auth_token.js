@@ -1,7 +1,7 @@
 import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
 import axios from 'axios';
 
-export function generateAccessToken(){
+export async function generateToken(){
   console.log('trying');
     const params = new URLSearchParams();
       params.append('grant_type', 'authorization_code');

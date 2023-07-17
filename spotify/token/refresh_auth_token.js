@@ -33,8 +33,12 @@
 import axios from 'axios';
 import { Buffer } from 'buffer';
 import {REDIRECT_URI, CLIENT_ID, CLIENT_SECRET} from '../../config'
+import { generateToken } from './auth_token';
 
-export function generateAccessToken() {
+export async function generateAccessToken() {
+  if(localStorage.getItem('refresh_token')==="null"){
+    await generateToken();
+  }
   const params = new URLSearchParams();
   params.append('grant_type', 'refresh_token');
   params.append('refresh_token', localStorage.getItem('refresh_token'));
